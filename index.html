@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111c2e">
+  <meta name="description" content="Демонстрационная карта предприятий группы Казатомпром и статусов камер для KAP Technology.">
+  <title>KAP Technology — мониторинг безопасности</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy:#111c2e; --ink:#142238; --muted:#50617a; --line:#dae2ec;
+      --blue:#1854cc; --surface:#fff; --wash:#f1f5fa;
+      --green:#07664c; --red:#a52e28; --gold:#fbd66a;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    *, *::before, *::after { box-sizing:border-box }
+    [hidden] { display:none!important }
+    body { margin:0; background:var(--wash); color:var(--ink); min-width:280px }
+    h1,h2,h3,p { margin:0 }
+    button,input,select { font:inherit }
+    button { cursor:pointer }
+    a { color:var(--blue) }
+    :focus-visible { outline:3px solid #2a6ff2; outline-offset:3px }
+    .wrap { width:min(1440px, calc(100% - 72px)); margin-inline:auto }
+    .masthead { background:var(--navy); color:white }
+    .masthead .wrap { min-height:68px; display:flex; align-items:center; gap:24px; justify-content:space-between }
+    .brand { display:flex; align-items:center; gap:11px; font-weight:740; letter-spacing:.01em }
+    .brand-icon { display:grid; place-items:center; width:34px; height:34px; background:var(--gold); border-radius:8px; color:var(--navy) }
+    .brand-icon svg { width:21px }
+    .masthead a { color:#dbe7f9; text-underline-offset:4px; font-size:.875rem }
+    .badge { display:inline-flex; gap:7px; align-items:center; border-radius:999px; padding:6px 10px; font-size:.73rem; font-weight:760; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
+    .badge::before,.dot { content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:currentColor; flex:none }
+    .badge.demo { color:#624508; background:#fff2cc }
+    .badge.kind { color:#204985; background:#e9f1ff }
+    .hero { display:flex; align-items:flex-end; justify-content:space-between; gap:18px; padding:36px 0 23px }
+    .eyebrow { font-size:.72rem; letter-spacing:.15em; font-weight:800; text-transform:uppercase; color:var(--blue); margin-bottom:9px }
+    h1 { font-size:clamp(1.85rem, 4.25vw, 3.5rem); line-height:1.03; letter-spacing:-.057em }
+    .lede { margin-top:10px; color:var(--muted); line-height:1.5 }
+    .overview { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:17px }
+    .metric { border:1px solid var(--line); border-radius:12px; padding:11px 15px; display:flex; align-items:center; gap:12px; background:var(--surface) }
+    .metric strong { font-size:1.45rem; font-variant-numeric:tabular-nums }
+    .metric span { color:var(--muted); font-size:.84rem; line-height:1.2 }
+    .metric.online strong { color:var(--green) } .metric.offline strong { color:var(--red) }
+    .dashboard { display:grid; grid-template-columns:minmax(0,1fr) minmax(310px, .48fr); gap:16px; align-items:stretch }
+    .panel { border:1px solid var(--line); border-radius:16px; background:var(--surface); min-width:0 }
+    .map-panel { overflow:hidden }
+    .panel-head { min-height:62px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px }
+    h2 { font-size:1.18rem; letter-spacing:-.025em }
+    .panel-head span, .fine { color:var(--muted); font-size:.78rem; line-height:1.45 }
+    .map { position:relative; aspect-ratio:900/510; background:#101d31 }
+    .map svg { position:absolute; inset:0; width:100%; height:100% }
+    .marker { position:absolute; translate:-50% -50%; display:grid; place-items:center; width:35px; height:35px; border:2px solid #a8c7ff; border-radius:50%; background:#2459ad; color:white; font-size:.84rem; font-weight:800; box-shadow:0 0 0 4px #83b1ff2e }
+    .marker:hover,.marker[aria-pressed="true"] { background:var(--gold); border-color:#fff1bd; color:#2a210f; box-shadow:0 0 0 5px #fbd66a40 }
+    .marker span { position:absolute; top:calc(100% + 8px); padding:3px 6px; background:#101d31; border-radius:4px; color:#e9f1fc; font-size:.69rem; line-height:1.15; white-space:nowrap; font-weight:650; pointer-events:none }
+    .marker[data-region="west"] span { top:auto; right:calc(100% + 6px) }
+    .marker[data-region="south"] span { top:calc(100% + 10px); right:50% }
+    .marker[data-region="east"] span { right:-12px }
+    .marker[data-region="almaty"] span { left:30% }
+    .map-caption { padding:11px 18px; display:flex; gap:8px 12px; flex-wrap:wrap; justify-content:space-between; font-size:.76rem; color:var(--muted) }
+    .map-caption a { color:var(--muted); white-space:nowrap }
+    .map-choices { padding:0 18px 14px }
+    .map-choices .fine { display:block; margin-bottom:7px }
+    .choice-list { display:flex; flex-wrap:wrap; gap:6px; max-height:107px; overflow:auto; padding:3px }
+    .choice-list button { border:1px solid #ccd8e9; background:#f5f8fd; color:var(--ink); padding:5px 9px; border-radius:7px; font-size:.77rem; text-align:left }
+    .choice-list button:hover,.choice-list button[aria-pressed="true"] { background:#e4edff; border-color:#759de3; color:#123d8e }
+    .card { padding:19px; display:flex; flex-direction:column; gap:15px; scroll-margin-top:12px }
+    .card-meta { display:flex; flex-wrap:wrap; align-items:center; gap:9px; justify-content:space-between }
+    .card-meta .eyebrow { margin:0 }
+    .card h2 { font-size:clamp(1.3rem, 2.3vw, 1.95rem); overflow-wrap:anywhere; line-height:1.12; margin-bottom:7px }
+    .card .location { display:block; color:#334d71; font-weight:680; font-size:.84rem }
+    .card .address { margin-top:4px; color:var(--muted); font-size:.83rem }
+    .about { color:var(--muted); font-size:.88rem; line-height:1.5 }
+    .camera-buttons { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:auto }
+    .camera-buttons button { border-radius:9px; border:1px solid; padding:9px 10px; text-align:left; font-size:.76rem; font-weight:700 }
+    .camera-buttons strong { display:block; font-size:1.65rem; margin-bottom:2px; line-height:1; font-variant-numeric:tabular-nums }
+    .camera-buttons .on { color:var(--green); background:#e9f7f0; border-color:#badfcd }
+    .camera-buttons .off { color:var(--red); background:#fff0ed; border-color:#f1c8c1 }
+    .camera-buttons button:hover { filter:brightness(.96) }
+    .primary { border:0; background:var(--blue); color:white; padding:10px 13px; font-weight:730; border-radius:9px; display:flex; justify-content:space-between; align-items:center; gap:10px; width:100%; text-align:left }
+    .primary:hover { background:#1245b0 }
+    .directory { margin-top:17px; padding:18px }
+    .directory-head { display:flex; justify-content:space-between; align-items:flex-end; gap:14px; margin-bottom:13px }
+    .filters { display:flex; gap:8px }
+    .filters label { min-width:0 }
+    .filters input,.filters select { width:100%; background:white; border:1px solid #c6d3e4; border-radius:8px; padding:8px 10px; color:var(--ink); font-size:.82rem }
+    .filters select { max-width:230px }
+    .directory-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px }
+    .directory-list button { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:8px; width:100%; text-align:left; padding:9px 11px; border-radius:8px; border:1px solid #dbe4f0; background:#f8faff; color:var(--ink); font-size:.83rem }
+    .directory-list button:hover,.directory-list button[aria-pressed="true"] { background:#edf3ff; border-color:#92afe1 }
+    .directory-list small { display:block; color:var(--muted); margin-top:3px; line-height:1.3 }
+    .directory-list strong { overflow-wrap:anywhere }
+    footer { padding-block:16px 22px; display:flex; flex-wrap:wrap; gap:8px 18px; color:var(--muted); font-size:.78rem }
+    footer a { color:var(--muted) }
+    dialog { padding:0; width:min(665px, calc(100% - 28px)); max-height:calc(100% - 34px); border:1px solid var(--line); border-radius:16px; color:var(--ink); box-shadow:0 24px 70px #060e2060 }
+    dialog::backdrop { background:#091427ac }
+    .dialog-head { position:sticky; top:0; z-index:1; background:white; padding:15px 18px; border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:center; justify-content:space-between }
+    .dialog-head h2 { font-size:1.25rem }
+    .close { border:1px solid var(--line); background:var(--wash); color:var(--ink); width:38px; height:38px; flex:none; border-radius:8px; font-size:1.3rem }
+    .dialog-body { display:grid; gap:14px; padding:18px; font-size:.9rem; line-height:1.45 }
+    .dialog-body ul { margin:6px 0 0; padding-left:20px }
+    .dialog-body li + li { margin-top:5px }
+    .dialog-body h3 { font-size:.98rem; margin-bottom:5px }
+    .callout { padding:11px 12px; background:#fff6de; border-radius:8px; color:#614710 }
+    .camera-list { list-style:none; padding:0!important }
+    .camera-list li { display:flex; justify-content:space-between; gap:10px; border:1px solid var(--line); border-radius:8px; padding:8px 10px }
+    .camera-list small { color:var(--muted) }
+    .camera-list .on { color:var(--green) }
+    .camera-list .off { color:var(--red) }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap }
+    @media(max-width:1000px) { .wrap { width:calc(100% - 36px) } }
+    @media(max-width:760px) {
+      .dashboard { grid-template-columns:1fr }
+      .hero { padding-top:25px; align-items:flex-start; flex-direction:column }
+      .directory-list { grid-template-columns:repeat(2,minmax(0,1fr)) }
+    }
+    @media(max-width:460px) {
+      .wrap { width:calc(100% - 22px) }
+      .masthead .wrap { min-height:55px }
+      .hero { gap:10px }
+      .overview { gap:5px }
+      .metric { flex-direction:column; align-items:flex-start; justify-content:center; gap:3px; padding:8px }
+      .metric strong { font-size:1.2rem }
+      .metric span { font-size:.7rem }
+      .panel-head span { display:none }
+      .map { aspect-ratio:900/560 }
+      .marker { width:29px; height:29px; font-size:.72rem }
+      .marker span { display:none }
+      .directory-head { align-items:stretch; flex-direction:column }
+      .filters { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) }
+      .directory-list { grid-template-columns:1fr }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2 3 7v10l9 5 9-5V7L12 2Z"/><path d="M12 7 7.5 9.5v5L12 17l4.5-2.5v-5L12 7Z"/><path d="M12 2v5m0 10v5M3 7l4.5 2.5m9 5L21 17M21 7l-4.5 2.5m-9 5L3 17"/></svg></span>
+        KAP Technology
+      </div>
+      <a href="#directory">Реестр ДЗО</a>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="hero">
+      <div><p class="eyebrow">Промышленная безопасность</p><h1>Мониторинг камер ДЗО</h1><p class="lede">Карта предприятий группы Казатомпром и состояние камер видеоаналитики.</p></div>
+      <span class="badge demo">Демонстрационные данные</span>
+    </div>
+    <section class="overview" aria-label="Демонстрационная сводка по организациям и камерам">
+      <div class="metric"><strong id="org-total">—</strong><span>Организаций на карте</span></div>
+      <div class="metric online"><strong id="online-total">—</strong><span>Камеры в работе</span></div>
+      <div class="metric offline"><strong id="offline-total">—</strong><span>Камеры вне сети</span></div>
+    </section>
+    <div class="dashboard">
+      <section class="panel map-panel" aria-labelledby="map-title">
+        <div class="panel-head"><h2 id="map-title">Карта Казахстана</h2><span>Выберите отметку на карте</span></div>
+        <div class="map" id="map" role="group" aria-label="Географические отметки предприятий">
+          <svg viewBox="0 0 900 510" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#243a56" stroke-width="1"/></pattern>
+              <linearGradient id="land" x2="0" y2="1"><stop stop-color="#264769"/><stop offset="1" stop-color="#1a3454"/></linearGradient>
+            </defs>
+            <rect width="900" height="510" fill="url(#grid)"/>
+            <path d="M549.2,408.7 L537.8,413.5 L511.4,431.6 L502.6,450.2 L495.2,450.4 L489.7,438.1 L464.3,437.2 L460.2,415.9 L450.5,415.7 L452.0,389.7 L428.0,370.7 L393.7,372.7 L370.3,376.5 L351.2,353.0 L334.8,343.2 L303.8,324.6 L300.1,322.3 L248.6,337.7 L249.4,433.6 L239.1,434.8 L225.1,414.5 L211.6,407.2 L188.9,412.6 L180.0,421.2 L178.9,414.9 L183.8,404.1 L180.0,395.0 L156.8,386.1 L147.8,362.8 L136.8,356.2 L136.1,347.7 L155.6,350.2 L156.3,331.2 L173.3,327.0 L190.8,330.9 L194.4,305.5 L190.9,289.4 L170.8,290.7 L153.8,284.3 L130.7,295.8 L112.0,301.2 L101.9,297.0 L103.9,283.6 L91.1,266.3 L76.3,267.0 L59.3,249.4 L70.9,229.6 L65.0,224.3 L81.0,195.8 L101.6,210.9 L104.0,191.9 L145.3,163.6 L176.6,162.9 L220.7,180.9 L244.3,191.4 L265.6,180.5 L297.3,179.9 L322.8,193.4 L328.7,185.7 L356.7,186.8 L361.8,174.5 L329.4,156.6 L348.5,144.0 L344.8,136.9 L364.0,130.1 L349.6,112.3 L358.7,103.4 L433.6,94.4 L443.3,88.0 L493.4,78.4 L511.4,67.6 L547.3,73.2 L553.6,100.1 L574.5,93.8 L600.2,102.7 L598.5,116.9 L617.7,115.4 L667.8,90.8 L660.5,99.0 L686.0,119.1 L730.7,185.1 L741.4,171.5 L768.9,186.5 L797.7,179.8 L808.7,184.5 L818.3,199.5 L832.3,204.6 L840.8,215.6 L866.6,212.1 L877.2,228.0 L862.0,245.3 L845.4,247.8 L844.4,273.8 L833.3,285.6 L793.6,277.0 L779.2,323.6 L768.9,329.4 L729.3,339.7 L747.3,384.9 L733.6,391.7 L735.2,406.5 L722.9,402.7 L712.8,393.3 L683.2,390.6 L650.0,389.9 L642.7,392.8 L614.3,381.8 L602.9,387.2 L599.8,402.6 L566.9,393.6 L553.7,397.3 L549.2,408.7Z" fill="url(#land)" stroke="#6e92b9" stroke-width="2"/>
+            <text x="410" y="265" text-anchor="middle" fill="#bad2ed" font-size="21" letter-spacing="7" font-family="system-ui, sans-serif">КАЗАХСТАН</text>
+            <path d="M48 82v-29m-6 8 6-8 6 8" fill="none" stroke="#9eb9d9" stroke-width="1.6"/>
+            <text x="48" y="46" text-anchor="middle" fill="#b9cde6" font-size="13" font-family="system-ui, sans-serif">С</text>
+          </svg>
+        </div>
+        <div class="map-caption"><span>Отметки показывают районы размещения. Число на отметке — количество организаций.</span><a href="https://github.com/johan/world.geo.json/blob/master/countries/KAZ.geo.json" target="_blank" rel="noopener noreferrer">Контур карты ↗</a></div>
+        <div class="map-choices" id="map-choices" hidden><span class="fine" id="map-region"></span><div class="choice-list" id="choices" role="group" aria-labelledby="map-region"></div></div>
+      </section>
+      <section class="panel card" id="company-card" aria-labelledby="company-title" tabindex="-1">
+        <div class="card-meta"><p class="eyebrow">Выбранная организация</p><span class="badge kind" id="company-kind"></span></div>
+        <div aria-live="polite" aria-atomic="true">
+          <h2 id="company-title"></h2>
+          <span class="location" id="company-site"></span>
+          <p class="address" id="company-address"></p>
+        </div>
+        <p class="about" id="company-about"></p>
+        <div class="camera-buttons">
+          <button class="on" type="button" data-details="on"><strong id="company-on"></strong><span>Камеры работают</span></button>
+          <button class="off" type="button" data-details="off"><strong id="company-off"></strong><span>Камеры не работают</span></button>
+        </div>
+        <button class="primary" type="button" data-details="all">Подробнее об организации <span aria-hidden="true">→</span></button>
+        <p class="fine">Счётчики и журнал камер показывают пример работы интерфейса.</p>
+      </section>
+    </div>
+    <section class="panel directory" id="directory" aria-labelledby="directory-title">
+      <div class="directory-head">
+        <div><p class="eyebrow">Поиск по объектам</p><h2 id="directory-title">Реестр организаций</h2></div>
+        <div class="filters">
+          <label><span class="sr-only">Название или адрес</span><input id="search" type="search" placeholder="Название или адрес"></label>
+          <label><span class="sr-only">Область</span><select id="region-filter"><option value="">Все области</option></select></label>
+        </div>
+      </div>
+      <p class="fine" id="result-count" role="status"></p>
+      <div class="directory-list" id="directory-list"></div>
+    </section>
+    <footer>
+      <span>Прототип для KAP Technology</span>
+      <a href="https://kaptechnology.kazatomprom.kz/ru" target="_blank" rel="noopener noreferrer">KAP Technology ↗</a>
+      <a href="https://www.kazatomprom.kz/ru/page/dochernie_i_zavisimie_kompanii" target="_blank" rel="noopener noreferrer">Справочник Казатомпрома ↗</a>
+      <a href="https://www.kazatomprom.kz/ru/media/view/kazatomprom_hse_digitalisation" target="_blank" rel="noopener noreferrer">Цифровизация производственной безопасности ↗</a>
+    </footer>
+  </main>
+  <dialog id="details" aria-labelledby="details-title">
+    <div class="dialog-head"><h2 id="details-title"></h2><form method="dialog"><button class="close" aria-label="Закрыть">×</button></form></div>
+    <div class="dialog-body" id="details-body"></div>
+  </dialog>
+  <script>
+const catalog = 'https://www.kazatomprom.kz/ru/page/dochernie_i_zavisimie_kompanii';
+const assetReport = 'https://www.kazatomprom.kz/storage/4d/kap_iar_2025_final_rus.pdf';
+const regions = [
+  { id: 'north', name: 'Акмолинская и Северо-Казахстанская области', label: 'Семизбай', x: 61, y: 25 },
+  { id: 'east', name: 'Восточно-Казахстанская область', label: 'Усть-Каменогорск', x: 87, y: 41 },
+  { id: 'west', name: 'Кызылординская область', label: 'Кызылординская обл.', x: 50, y: 71 },
+  { id: 'south', name: 'Туркестанская область', label: 'Туркестанская обл.', x: 60, y: 81 },
+  { id: 'almaty', name: 'Алматинская область', label: 'Покровка', x: 78, y: 83 },
+];
+
+const companies = [
+  {
+    id: 'umz', name: 'Ульбинский металлургический завод', legal: 'АО «УМЗ»', kind: 'Металлургия',
+    about: 'Предприятие выпускает продукцию на основе урана, тантала и бериллия.',
+    sites: [['east', 'Урановое, танталовое и бериллиевое производства', 'Усть-Каменогорск, проспект Абая, 102']],
+    sources: [['Сайт УМЗ', 'https://www.ulba.kz/ru/']], demo: [24, 2],
+  },
+  {
+    id: 'semiz', name: 'Семизбай-U', legal: 'ТОО «Семизбай-U»', kind: 'Добыча урана',
+    about: 'Добывает уран на рудниках «Ирколь» и «Семизбай» методом подземного скважинного выщелачивания.',
+    sites: [['west', 'Рудник «Ирколь»', 'Кызылординская область, Шиелийский район'], ['north', 'Рудник «Семизбай»', 'Граница Акмолинской и Северо-Казахстанской областей']],
+    office: 'Астана, ул. Сыганак, 17/12',
+    sources: [['Сайт предприятия', 'https://semyzbay-u.kazatomprom.kz/ru'], ['Паспорт предприятия', 'https://semyzbay-u.kazatomprom.kz/sites/default/files/pasport_predpriyatiya_za_1_kvartal_po_sostoyaniyu_na_31_marta_2024g.pdf']],
+    note: 'В исходном файле указан Степногорск. На карте использован район рудника из паспорта предприятия.',
+    demo: [16, 1],
+  },
+  {
+    id: 'baiken', name: 'Байкен-U', legal: 'ТОО «Байкен-U»', kind: 'Добыча урана',
+    about: 'Разведывает и разрабатывает участок Харасан-2 и юго-восточный фланг месторождения Северный Харасан.',
+    sites: [['west', 'Харасан-2', 'Кызылординская область, Жанакорганский район']],
+    office: 'Кызылорда, ул. Байсеитова, 88',
+    sources: [['Сайт предприятия', 'https://baiken-u.kazatomprom.kz/ru']], demo: [21, 3],
+  },
+  {
+    id: 'kyzylkum', name: 'Кызылкум', legal: 'ТОО «Кызылкум»', kind: 'Добыча урана',
+    about: 'В справочнике Казатомпрома предприятие связано с участком Харасан-1 месторождения Северный Харасан.',
+    sites: [['west', 'Харасан-1', 'Кызылординская область, Жанакорганский район, район села Байкенже']],
+    office: 'Кызылорда, ул. Айтеке би, 52',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['Отчёт Казатомпрома об активах', assetReport]],
+    note: 'В отчётности право недропользования по участку указано за ТОО «Turanium» (бывшее СП «Хорасан-U»). Перед подключением камер нужно сверить владельца площадки с внутренним реестром.',
+    demo: [13, 1],
+  },
+  {
+    id: 'ru6', name: 'РУ-6', legal: 'ТОО «РУ-6»', kind: 'Добыча урана',
+    about: 'Добывает и первично перерабатывает уран на месторождениях Северный и Южный Карамурун.',
+    sites: [['west', 'Северный и Южный Карамурун', 'Кызылординская область, Шиелийский район']],
+    office: 'Село Бидайколь, урочище Бидайкол, строение 3',
+    sources: [['Сайт РУ-6', 'https://ru6.kazatomprom.kz/ru']], demo: [18, 2],
+  },
+  {
+    id: 'zarechnoe', name: 'Заречное', legal: 'АО «СП „Заречное“»', kind: 'Добыча урана',
+    about: 'Разрабатывает одноимённое месторождение методом подземного скважинного выщелачивания.',
+    sites: [['south', 'Рудник «Заречное»', 'Туркестанская область, Отырарский район']],
+    office: 'Село Тимур, ул. Б. Момышулы, 51',
+    sources: [['Сайт предприятия', 'https://zarechnoe.kazatomprom.kz/ru'], ['Материал о руднике', 'https://www.kazatomprom.kz/ru/media/view/media_representatives_visited_the_zarechnoye_mine']], demo: [15, 0],
+  },
+  {
+    id: 'sauran', name: 'Казатомпром-SaUran', legal: 'ТОО «Казатомпром-SaUran»', kind: 'Добыча урана',
+    about: 'Добывает и перерабатывает природный уран. В перечень для этой карты вошли Канжуган, Центральный Мойынкум и Восточный Мынкудук.',
+    sites: [['south', 'Канжуган, Центральный Мойынкум, Восточный Мынкудук', 'Туркестанская область']],
+    office: 'Туркестанская область, Созакский район, пос. Таукент',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['География активов', assetReport]],
+    note: 'В документе «Акдала» указана у SaUran. По данным Казатомпрома она относится к СП «ЮГХК».',
+    demo: [29, 2],
+  },
+  {
+    id: 'akbastau', name: 'Акбастау', legal: 'АО «СП „Акбастау“»', kind: 'Добыча урана',
+    about: 'Разрабатывает участки № 1, 3 и 4 месторождения Буденовское на руднике «Куланды».',
+    sites: [['south', 'Рудник «Куланды»', 'Туркестанская область, Созакский район']],
+    office: 'Шымкент, бульвар Кунаева, 83/1',
+    sources: [['Карточка «Акбастау»', 'https://www.kazatomprom.kz/ru/media/view/ao_sp_akbastau'], ['Материалы о руднике', 'https://hearings.ndbecology.gov.kz/Public/PubHearings/PublicHearingDetail?hearingId=36428']], demo: [14, 1],
+  },
+  {
+    id: 'karatau', name: 'Каратау', legal: 'ТОО «Каратау»', kind: 'Добыча урана',
+    about: 'Занимается разведкой и добычей урана на участке № 2 месторождения Буденовское.',
+    sites: [['south', 'Рудник «Каратау»', 'Туркестанская область, Созакский район']],
+    office: 'Шымкент, проспект Кунаева, 23А',
+    sources: [['Карточка «Каратау»', 'https://www.kazatomprom.kz/ru/media/view/too_karatau']], demo: [20, 1],
+  },
+  {
+    id: 'appak', name: 'АППАК', legal: 'ТОО «АППАК»', kind: 'Добыча урана',
+    about: 'Добывает уран на Западном участке месторождения Мынкудук.',
+    sites: [['south', 'Западный Мынкудук', 'Туркестанская область, Созакский район']],
+    office: 'Шымкент, проспект Кунаева, 23А',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['География активов', assetReport]], demo: [17, 0],
+  },
+  {
+    id: 'ortalyk', name: 'Орталык', legal: 'ТОО «ДП „Орталык“»', kind: 'Добыча урана',
+    about: 'Добывающее предприятие, в портфель которого входят Центральный Мынкудук и Жалпак.',
+    sites: [['south', 'Центральный Мынкудук и Жалпак', 'Туркестанская область']],
+    office: 'Шымкент, проспект Байдибек би, 27А',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['География активов', assetReport]], demo: [22, 2],
+  },
+  {
+    id: 'inkai', name: 'Инкай', legal: 'ТОО «СП „Инкай“»', kind: 'Добыча урана',
+    about: 'Совместное предприятие Казатомпрома и Cameco разрабатывает участок № 1 месторождения Инкай.',
+    sites: [['south', 'Инкай, участок № 1', 'Туркестанская область, Созакский район']],
+    office: 'Шымкент, проспект Кунаева, 80',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['Профиль проекта у Cameco', 'https://www.cameco.com/businesses/uranium-operations/kazakhstan/inkai']],
+    note: 'В исходном списке выделены ОПЗ и сателлиты 1 и 2. Их привязку к камерам нужно сверить по внутреннему реестру.',
+    demo: [28, 3],
+  },
+  {
+    id: 'ughk', name: 'Южная горно-химическая компания', legal: 'ТОО «СП „ЮГХК“»', kind: 'Добыча урана',
+    about: 'Разрабатывает месторождение Акдала и Южный Инкай (участок № 4 месторождения Инкай).',
+    sites: [['south', 'Акдала и Южный Инкай', 'Туркестанская область']],
+    office: 'Шымкент, проспект Д. Кунаева, 23А',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['География активов', assetReport]], demo: [20, 2],
+  },
+  {
+    id: 'skz', name: 'СКЗ-U', legal: 'ТОО «СКЗ-U»', kind: 'Химическое производство',
+    about: 'Сернокислотный завод производит реагент для предприятий, добывающих уран методом выщелачивания.',
+    sites: [['west', 'Сернокислотный завод', 'Кызылординская область, Жанакорганский район']],
+    sources: [['Сайт СКЗ-U', 'https://sap-u.kazatomprom.kz/ru'], ['Материал о заводе', 'https://www.kazatomprom.kz/ru/media/view/dochernyaya-kompaniya-kazatomproma-proizvela-million-tonny-sernoy-kisloty']], demo: [12, 1],
+  },
+  {
+    id: 'vg', name: 'Волковгеология', legal: 'АО «Волковгеология»', kind: 'Буровое оборудование',
+    about: 'Филиал УПТОК производит буровой инструмент и обслуживает оборудование для буровых работ.',
+    sites: [['almaty', 'Филиал УПТОК', 'Алматинская область, Илийский район, пос. Покровка, ул. Садовая']],
+    sources: [['Страница филиала УПТОК', 'https://www.vg.kz/ru/affiliates/uptok/']], demo: [11, 1],
+  },
+  {
+    id: 'bud', name: 'Буденовское', legal: 'ТОО «СП „Буденовское“»', kind: 'Добыча урана',
+    about: 'Предприятие ведёт работы на участках № 6 и 7 месторождения Буденовское.',
+    sites: [['south', 'Буденовское, участки № 6 и 7', 'Туркестанская область']],
+    office: 'Шымкент, ул. Рыскулова, 78А',
+    sources: [['Карточка в справочнике Казатомпрома', catalog], ['География активов', assetReport]], demo: [19, 1],
+  },
+  {
+    id: 'log', name: 'KAP Logistics', legal: 'ТОО «KAP Logistics»', kind: 'Транспорт и логистика',
+    about: 'Обеспечивает предприятия группы транспортом и материально-техническими услугами.',
+    sites: [['west', 'Филиал «Шиелі-Сұңқар»', 'Кызылординская область, Шиелийский район, пос. Шиели'], ['south', 'Централизованная автоперевалочная база', 'Туркестанская область, Созакский район, пос. Таукент']],
+    office: 'Астана, ул. Сыганак, 17/12',
+    sources: [['Сайт KAP Logistics', 'https://kapl.kazatomprom.kz/ru'], ['Перечень филиалов', 'https://kapl.kazatomprom.kz/sites/default/files/sertifikat_kap_logistics_9001_rus.pdf']], demo: [14, 0],
+  },
+];
+
+const element = id => document.getElementById(id);
+const put = (id, text) => { element(id).textContent = text; };
+const companiesIn = region => companies.filter(company => company.sites.some(site => site[0] === region));
+const names = new Map(regions.map(region => [region.id, region.name]));
+const format = new Intl.NumberFormat('ru-RU');
+const count = (values, index) => values.reduce((sum, company) => sum + company.demo[index], 0);
+const cameraLabels = { on: 'Работают', off: 'Не работают', all: 'Обзор организации' };
+const search = element('search');
+const regionFilter = element('region-filter');
+const dialog = element('details');
+const card = element('company-card');
+
+let selected = companies[0];
+let activeRegion = selected.sites[0][0];
+
+function node(tag, text, className) {
+  const result = document.createElement(tag);
+  if (text) result.textContent = text;
+  if (className) result.className = className;
+  return result;
+}
+
+function action(text, handler, className) {
+  const button = node('button', text, className);
+  button.type = 'button';
+  button.addEventListener('click', handler);
+  return button;
+}
+
+function syncSelection() {
+  for (const marker of document.querySelectorAll('[data-region]')) {
+    marker.setAttribute('aria-pressed', marker.dataset.region === activeRegion);
+  }
+  for (const button of document.querySelectorAll('[data-company]')) {
+    button.setAttribute('aria-pressed', button.dataset.company === selected.id);
+  }
+}
+
+function showChoices() {
+  const matching = companiesIn(activeRegion);
+  element('map-choices').hidden = matching.length === 1;
+  put('map-region', names.get(activeRegion) + ' · выберите организацию');
+  element('choices').replaceChildren(...matching.map(company => {
+    const button = action(company.legal, () => selectCompany(company, activeRegion, true));
+    button.dataset.company = company.id;
+    return button;
+  }));
+}
+
+function selectCompany(company, region, focusCard = false) {
+  const regionChanged = region !== activeRegion;
+  selected = company;
+  activeRegion = region;
+  const [, site, address] = company.sites.find(location => location[0] === region);
+  put('company-title', company.legal);
+  put('company-kind', company.kind);
+  put('company-site', site);
+  put('company-address', address);
+  put('company-about', company.about);
+  put('company-on', format.format(company.demo[0]));
+  put('company-off', format.format(company.demo[1]));
+  if (regionChanged) showChoices();
+  syncSelection();
+  if (focusCard) card.focus();
+}
+
+function showDirectory() {
+  const query = search.value.toLocaleLowerCase('ru').trim();
+  const region = regionFilter.value;
+  const matching = companies.filter(company => {
+    const fields = [company.name, company.legal, company.office, ...company.sites.flat(), ...company.sites.map(site => names.get(site[0]))];
+    const matchesText = fields.join(' ').toLocaleLowerCase('ru').includes(query);
+    return matchesText && (!region || company.sites.some(site => site[0] === region));
+  });
+  put('result-count', matching.length ? 'Найдено: ' + matching.length : 'Организации по этим условиям не найдены.');
+  element('directory-list').replaceChildren(...matching.map(company => {
+    const site = region ? company.sites.find(location => location[0] === region) : company.sites[0];
+    const button = action('', () => selectCompany(company, site[0], true));
+    button.dataset.company = company.id;
+    const summary = node('span');
+    summary.append(node('strong', company.legal), node('small', site[2]));
+    const arrow = node('span', '→');
+    arrow.setAttribute('aria-hidden', 'true');
+    button.append(summary, arrow);
+    return button;
+  }));
+  syncSelection();
+}
+
+function renderCameras(company, status) {
+  const section = node('section');
+  const online = status === 'on';
+  const quantity = company.demo[online ? 0 : 1];
+  section.append(node('h3', cameraLabels[status] + ' · ' + quantity));
+  if (quantity === 0) {
+    section.append(node('p', 'В демонстрационном наборе нет камер с этим статусом.'));
+    return section;
+  }
+
+  const list = node('ul', '', 'camera-list');
+  const sampleZones = ['Вход в рабочую зону', 'Проход в цех', 'Площадка обслуживания'];
+  for (let index = 0; index < quantity; index++) {
+    const number = index + (online ? 1 : company.demo[0] + 1);
+    const row = node('li');
+    const description = node('div');
+    description.append(node('strong', 'DEMO-' + String(number).padStart(3, '0')), node('br'), node('small', sampleZones[index % sampleZones.length]));
+    row.append(description, node('span', online ? 'На связи' : 'Нет связи', status));
+    list.append(row);
+  }
+  section.append(list);
+  return section;
+}
+
+function showDetails(status) {
+  put('details-title', selected.legal + ' · ' + cameraLabels[status]);
+  const body = element('details-body');
+  body.replaceChildren(node('p', 'Демонстрационный режим. Статусы и зоны в журнале условные.', 'callout'));
+
+  if (status === 'all') {
+    const sites = node('section');
+    sites.append(node('h3', 'Производственные площадки'), node('p', selected.about));
+    const locations = node('ul');
+    for (const [, name, address] of selected.sites) locations.append(node('li', name + ' · ' + address));
+    sites.append(locations);
+    if (selected.office) sites.append(node('p', 'Опубликованный адрес организации — ' + selected.office));
+    const analytics = node('section');
+    analytics.append(node('h3', 'Сценарии видеоаналитики'), node('p', 'Проверка наличия каски и спецодежды. Поддержку этих проверок для каждой камеры нужно подтвердить при подключении.'));
+    const sources = node('section');
+    sources.append(node('h3', 'Источники об организации'));
+    const links = node('ul');
+    for (const [label, url] of selected.sources) {
+      const item = node('li');
+      const link = node('a', label + ' ↗');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      item.append(link);
+      links.append(item);
+    }
+    sources.append(links);
+    body.append(sites, analytics, sources);
+    if (selected.note) body.append(node('p', selected.note, 'callout'));
+  } else {
+    body.append(renderCameras(selected, status));
+  }
+  dialog.showModal();
+  dialog.scrollTop = 0;
+}
+
+for (const region of regions) {
+  const matching = companiesIn(region.id);
+  const marker = action(String(matching.length), () => {
+    const company = matching.includes(selected) ? selected : matching[0];
+    selectCompany(company, region.id, matching.length === 1);
+    if (matching.length > 1) element('choices').querySelector('[aria-pressed="true"]').focus();
+  }, 'marker');
+  marker.style.left = region.x + '%';
+  marker.style.top = region.y + '%';
+  marker.dataset.region = region.id;
+  marker.setAttribute('aria-label', region.name + ' · организаций: ' + matching.length);
+  marker.append(node('span', region.label));
+  element('map').append(marker);
+  regionFilter.add(new Option(region.name, region.id));
+}
+search.addEventListener('input', showDirectory);
+regionFilter.addEventListener('change', showDirectory);
+for (const button of document.querySelectorAll('[data-details]')) {
+  button.addEventListener('click', () => showDetails(button.dataset.details));
+}
+put('org-total', format.format(companies.length));
+put('online-total', format.format(count(companies, 0)));
+put('offline-total', format.format(count(companies, 1)));
+showChoices();
+showDirectory();
+selectCompany(selected, activeRegion);
+  </script>
+</body>
+</html>
