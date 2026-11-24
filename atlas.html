@@ -210,7 +210,7 @@ footer .data-note{margin-left:auto;color:var(--muted);font-size:.7rem}
 <section class="panel map-panel" aria-labelledby="map-title">
         <div class="panel-head">
           <div><h2 id="map-title">Карта Казахстана</h2><p class="fine" id="map-hint">Нажмите на группу, чтобы приблизить регион</p></div>
-          <div class="map-tools"><button type="button" class="map-reset offline-toggle" id="map-offline" aria-pressed="false">Вне сети</button>
+          <div class="map-tools"><button type="button" class="map-reset" id="map-zoom-in" aria-label="Приблизить карту">+</button><button type="button" class="map-reset" id="map-zoom-out" aria-label="Отдалить карту">−</button><button type="button" class="map-reset offline-toggle" id="map-offline" aria-pressed="false">Вне сети</button>
             <button class="map-reset" id="map-reset" type="button" hidden>← Весь Казахстан</button>
             <div class="atlas-search" id="atlas-search-wrap">
               <label class="sr-only" for="atlas-search">Поиск предприятия на карте</label>
@@ -544,14 +544,14 @@ const demoAlarms = alarmCategories.map((category, index) => ({
   phase: '—', happened: '',
 }));
 let alarmPage = 0;
-function alarmsWithLocations() { return demoAlarms; }
-function renderCompanyStatus(company) {
-  put('company-on', format.format(company.demo[0]));
-  put('company-off', format.format(cameraMapCount(company, activeRegion)));
-  const amount = demoAlarms.filter(alarm => alarm.location[0] === company.id).length;
-  put('company-alarms', 'Тревоги организации · ' + amount + ' →');
-}
-function renderAlarmRow(alarm) {
+    function alarmsWithLocations() { return demoAlarms; }
+    function renderCompanyStatus(company) {
+      put('company-on', format.format(company.demo[0]));
+      put('company-off', format.format(cameraMapCount(company, activeRegion)));
+      const amount = demoAlarms.filter(alarm => alarm.location[0] === company.id).length;
+      put('company-alarms', 'Тревоги организации · ' + amount + ' →');
+    }
+    function renderAlarmRow(alarm) {
   const row = node('tr');
   const location = node('td', alarm.site || 'Площадка не указана');
   location.append(node('small', alarm.name || 'Камера не указана'));
@@ -616,7 +616,7 @@ function setupHikcentral() {
     element('journal-title').focus();
   });
   put('online-total', format.format(count(companies, 0)));
-  put('offline-total', format.format(count(companies, 1)));
+      put('offline-total', format.format(count(companies, 1)));
   showAlarmJournal();
 }
 
@@ -640,7 +640,7 @@ let selectedMapLocation = null;
 function regionalEntries(region) {
   return companiesIn(region).flatMap(company => {
     const location = regionalMap[region]?.sites[company.id];
-    return location && (!offlineOnly || cameraMapCount(company, region)) ? [{ company, location }] : [];
+        return location && (!offlineOnly || cameraMapCount(company, region)) ? [{ company, location }] : [];
   });
 }
 
@@ -770,14 +770,15 @@ function positionOnMap(element, [x, y]) {
 }
 
 function renderRegionalMap() {
+  resetMapPan();
   if (!zoomedRegion) return;
   const towns = regionalMap[zoomedRegion]?.towns || [];
   const width = map.clientWidth || 640;
   const height = map.clientHeight || 360;
-  const matching = regionalEntries(zoomedRegion);
+  const matching = map.atlasViewport ? regions.flatMap(region => regionalEntries(region.id).map(entry => ({ ...entry, region: region.id }))) : regionalEntries(zoomedRegion);
   const geographicPoints = matching.map(({ location }) => worldPosition(location[0], location[1]));
   const landmarks = towns.map(([name, latitude, longitude]) => [name, worldPosition(latitude, longitude)]);
-  const [left, top, boxWidth, boxHeight] = mapBounds([...geographicPoints, ...landmarks.map(town => town[1])], width / height);
+  const [left, top, boxWidth, boxHeight] = map.atlasViewport || mapBounds([...geographicPoints, ...landmarks.map(town => town[1])], width / height);
   const screenPosition = ([x, y]) => [(x - left) / boxWidth * width, (y - top) / boxHeight * height];
 
   element('map-geography').setAttribute('viewBox', [left, top, boxWidth, boxHeight].join(' '));
@@ -793,8 +794,9 @@ function renderRegionalMap() {
   }
 
   const occupied = [];
-  matching.forEach(({ company, location }, index) => {
+  matching.forEach(({ company, location, region = zoomedRegion }, index) => {
     const anchor = screenPosition(geographicPoints[index]);
+    if (anchor[0] < 0 || anchor[0] > width || anchor[1] < 0 || anchor[1] > height) return;
     const pin = pinPosition(anchor, occupied, width, height);
     occupied.push(pin);
     if (pin[0] !== anchor[0] || pin[1] !== anchor[1]) {
@@ -803,9 +805,9 @@ function renderRegionalMap() {
         svgNode('circle', { cx: anchor[0], cy: anchor[1], r: 3, fill: '#a26523' }),
       );
     }
-    const number = offlineOnly ? cameraMapCount(company, zoomedRegion) : index + 1;
+    const number = offlineOnly ? cameraMapCount(company, region) : index + 1;
     const marker = action(String(number), () => {
-      openMapCompany(company, zoomedRegion, window.matchMedia('(max-width:760px)').matches, location);
+      openMapCompany(company, region, window.matchMedia('(max-width:760px)').matches, location);
     }, 'marker site-marker');
     marker.dataset.company = company.id;
     marker.dataset.mapIndex = String(index);
@@ -818,6 +820,7 @@ function renderRegionalMap() {
 }
 
 function zoomToRegion(region, matching) {
+  map.atlasViewport = null;
   zoomedRegion = region;
   element('map-regions').hidden = true;
   element('map-country-label').setAttribute('visibility', 'hidden');
@@ -835,6 +838,7 @@ function zoomToRegion(region, matching) {
 }
 
 function resetMap(focusRegion = true) {
+  map.atlasViewport = null;
   const previousRegion = zoomedRegion;
   zoomedRegion = null;
   selectedMapLocation = null;
@@ -849,7 +853,7 @@ function resetMap(focusRegion = true) {
   map.classList.remove('is-zoomed');
   put('map-title', 'Карта Казахстана');
   put('map-hint', 'Нажмите на группу, чтобы приблизить регион');
-  if (focusRegion) document.querySelector('[data-region="' + previousRegion + '"]').focus();
+  if (focusRegion && previousRegion) document.querySelector('[data-region="' + previousRegion + '"]').focus();
 }
 
 function showDirectory() {
@@ -968,15 +972,14 @@ map.addEventListener('keydown', event => {
 function renderMapView() {
   put('map-caption', offlineOnly ? 'Число на метке — количество камер вне сети.' :
     zoomedRegion ? 'Номера меток соответствуют списку ниже.' : 'Число на отметке — количество организаций.');
+  resetMapPan();
   if (zoomedRegion) {
     renderRegionalMap();
     return;
   }
   const ratio = (map.clientWidth || 900) / (map.clientHeight || 510);
-  const height = Math.max(447, 900 / ratio);
-  const width = height * ratio;
-  const left = (900 - width) / 2;
-  const top = (510 - height) / 2;
+  const baseHeight = Math.max(447, 900 / ratio);
+  const [left, top, width, height] = map.atlasViewport || [(900 - baseHeight * ratio) / 2, (510 - baseHeight) / 2, baseHeight * ratio, baseHeight];
   element('map-geography').setAttribute('viewBox', [left, top, width, height].join(' '));
   const markers = element('map-regions').children;
   regions.forEach((region, index) => {
@@ -1110,6 +1113,77 @@ element('atlas-search-wrap').addEventListener('focusout', event => {
   if (!element('atlas-search-wrap').contains(event.relatedTarget)) atlasResults.hidden = true;
 });
 showView(location.hash.slice(1), false);
+
+// A shared geographic viewport keeps the map and all markers aligned.
+function resetMapPan() {
+  for (const id of ['map-geography', 'map-regions', 'map-points', 'map-leaders']) {
+    element(id).style.transform = '';
+  }
+}
+
+function atlasViewport() {
+  const value = element('map-geography').getAttribute('viewBox');
+  return value ? value.split(/\s+/).map(Number) : [0, 0, 900, 510];
+}
+
+function updateAtlasViewport(view) {
+  const ratio = (map.clientWidth || 900) / (map.clientHeight || 510);
+  const baseHeight = Math.max(447, 900 / ratio);
+  const detail = view[2] < baseHeight * ratio * .62;
+  const center = [view[0] + view[2] / 2, view[1] + view[3] / 2];
+  const nearest = regions.filter(region => regionalEntries(region.id).length).sort((a, b) =>
+    Math.hypot(a.x * 9 - center[0], a.y * 5.1 - center[1]) -
+    Math.hypot(b.x * 9 - center[0], b.y * 5.1 - center[1]))[0];
+  if (detail && nearest && !zoomedRegion) zoomToRegion(nearest.id, companiesIn(nearest.id));
+  if (!detail && zoomedRegion) resetMap(false);
+  map.atlasViewport = view;
+  renderMapView();
+  resetMapButton.hidden = false;
+  if (detail) {
+    put('map-title', 'Предприятия на карте');
+    put('map-caption', 'Нажмите на метку ДЗО. Два пальца — перемещение, щипок — масштаб.');
+  }
+}
+
+function zoomAtlas(factor, clientX, clientY) {
+  const [left, top, width, height] = atlasViewport();
+  const rect = map.getBoundingClientRect();
+  const x = Number.isFinite(clientX) ? Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) : .5;
+  const y = Number.isFinite(clientY) ? Math.max(0, Math.min(1, (clientY - rect.top) / rect.height)) : .5;
+  const ratio = (map.clientWidth || 900) / (map.clientHeight || 510);
+  const maxWidth = Math.max(447, 900 / ratio) * ratio * 1.5;
+  const nextWidth = Math.max(45, Math.min(maxWidth, width * factor));
+  const nextHeight = nextWidth / ratio;
+  updateAtlasViewport([left + (width - nextWidth) * x, top + (height - nextHeight) * y, nextWidth, nextHeight]);
+}
+
+map.addEventListener('wheel', event => {
+  if (event.metaKey) return;
+  const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? (map.clientHeight || 510) : 1;
+  const dx = event.deltaX * unit;
+  const dy = event.deltaY * unit;
+  if (!Number.isFinite(dx) || !Number.isFinite(dy) || (!dx && !dy)) return;
+  event.preventDefault();
+  if (event.ctrlKey) {
+    zoomAtlas(Math.exp(Math.max(-.4, Math.min(.4, dy * .01))), event.clientX, event.clientY);
+    return;
+  }
+  const [left, top, width, height] = atlasViewport();
+  updateAtlasViewport([
+    Math.max(-900, Math.min(1800, left + dx * width / (map.clientWidth || 900))),
+    Math.max(-510, Math.min(1020, top + dy * height / (map.clientHeight || 510))),
+    width, height,
+  ]);
+}, { passive: false });
+
+map.addEventListener('dblclick', event => {
+  if (event.target.closest('button')) return;
+  event.preventDefault();
+  zoomAtlas(event.shiftKey ? 1.5 : 1 / 1.5, event.clientX, event.clientY);
+});
+
+element('map-zoom-in').addEventListener('click', () => zoomAtlas(1 / 1.5));
+element('map-zoom-out').addEventListener('click', () => zoomAtlas(1.5));
 
 </script>
 </body>
