@@ -186,6 +186,19 @@ footer .data-note{margin-left:auto;color:var(--muted);font-size:.7rem}
 .map.offline-only .map-key{display:none}
 @media(max-width:500px){.map-tools{flex-wrap:wrap;justify-content:flex-end}.atlas-search input{width:94px}}
 
+/* KAP monitoring workspace */
+:root{--ink:#162747;--deep:#122748;--text:#40516b;--muted:#6b7990;--paper:#f2f5f9;--panel:#fff;--line:#e1e7ef;--gold:#dba244;--warm:#fff5e1;--green:#15755f;--red:#b64445;--display:"Avenir Next","Segoe UI",system-ui,sans-serif;font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
+body{font-size:16px}a{color:#2459a0}.wrap{width:calc(100% - 48px);max-width:1920px}.masthead{background:#fff;color:var(--ink);border-bottom:1px solid var(--line)}.masthead .wrap{min-height:78px}.brand-block{padding:0}.brand-block img{width:118px;height:48px}.brand-text{font-size:15px;line-height:1.4}.brand-text small{color:var(--muted);font:600 11px var(--display);letter-spacing:.14em}.nav{gap:12px}.nav a{color:#6b7990;font-size:14px;padding:0 20px}.nav a:hover,.nav a[aria-current="page"]{color:#1c4586;background:#f5f8fc}.nav a[aria-current="page"]::after{background:#dca244;left:20px;right:20px}
+.hero{padding:27px 0 23px;align-items:center}.eyebrow{font:650 12px var(--display);letter-spacing:.1em;color:#73819a;margin-bottom:8px}h1{font:650 clamp(25px,2.4vw,36px)/1.15 var(--display);letter-spacing:-.04em}.lede{font-size:14px;margin-top:7px;color:#75829a}.overview{min-width:400px;border:0;background:#fff;border-radius:12px;box-shadow:0 2px 7px #182d4f04}.metric{padding:14px 22px;gap:5px}.metric+.metric{border-color:#e8edf4}.metric strong{font:650 28px/1 var(--display)}.metric span{font-size:12px}
+.atlas-workspace{display:grid;grid-template-columns:260px minmax(360px,1fr) 300px;gap:16px;align-items:start}.atlas-sidebar{border:1px solid var(--line);border-radius:14px;background:white;overflow:hidden;height:calc(100vh - 240px);min-height:520px;display:flex;flex-direction:column}.sidebar-head{padding:21px 18px 16px;border-bottom:1px solid #edf0f5}.sidebar-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}.sidebar-title h2{font-size:16px;font-weight:650}.sidebar-count{background:#eef3fa;color:#546b8d;font-size:12px;padding:4px 8px;border-radius:6px}.sidebar-head input,.sidebar-head select{width:100%;box-sizing:border-box;border:1px solid #e1e7f0;border-radius:8px;padding:11px 12px;background:#f8fafc;color:var(--ink);font:14px var(--display)}.sidebar-head select{margin-top:8px}.atlas-company-list{overflow-y:auto;overscroll-behavior:contain;padding:8px;flex:1}.atlas-company{width:100%;display:flex;align-items:center;gap:11px;border:1px solid transparent;background:white;border-radius:9px;padding:13px 9px;text-align:left;color:var(--ink);margin-bottom:3px}.atlas-company:hover{background:#f6f8fc}.atlas-company[aria-pressed="true"]{border-color:#d7e3f6;background:#eef4ff}.atlas-company .company-mark{width:38px;height:36px;border:0;padding:3px;background:white;border-radius:7px}.atlas-company-text{display:grid;gap:5px;min-width:0}.atlas-company-text strong{font-size:13px;font-weight:650;line-height:1.35}.atlas-company-text small{font-size:11px;line-height:1.4;color:#7a879b}.sidebar-empty{padding:20px 12px;color:var(--muted);font-size:14px;line-height:1.6}
+.map-panel{border:1px solid #dce4ed;border-radius:14px;background:#edf2f5;min-width:0;box-shadow:0 4px 18px #1a365006}.panel-head{background:#fff;border-color:#e4eaf1;padding:16px;gap:10px;flex-wrap:wrap;min-height:72px}.panel-head h2{font-size:15px;color:#233858}.panel-head .fine{font-size:12px;margin-top:4px}.map-tools{gap:5px;flex-wrap:wrap}#atlas-search-wrap{display:none}.map-reset,.small-action,.primary{border-radius:7px;border-color:#dce4ee;color:#3d5578;background:white;font-size:12px;padding:9px 10px}#map-zoom-in,#map-zoom-out{font-size:20px;width:34px;height:34px;line-height:1;padding:0}#map-reset{font-size:11px;max-width:125px}.map{height:calc(100vh - 400px);min-height:360px;max-height:none;aspect-ratio:auto;background:#e9eff3}.marker{background:#244d8c;box-shadow:0 0 0 5px #285a9c13,0 3px 7px #18375c22;width:38px;height:38px;font-size:14px}.marker span{color:#354d6b;background:#ffffffee;font-size:11px;padding:5px 7px;border-radius:5px;box-shadow:0 1px 4px #22375212}.marker:hover,.marker[aria-pressed="true"]{background:#e5ad4c;color:#3f2c0e;border-color:#fff}.site-marker{width:29px;height:29px;font-size:12px}.map-caption{background:#fff;border-color:#e2e8ef;font:11px/1.5 var(--display);padding:12px 16px}.map-choices{background:#f8fafc;border-color:#e2e8ef}.map-choice{font-size:12px;background:white;border-color:#dce4ee;border-radius:6px;color:#405675}.map-choice b{color:#2d528a}.map-key{background:#fffffff0;border-color:#d3dfe9;color:#4b617c;border-radius:7px;font-size:11px}.map-key span::before{background:#244d8c}.map-plate{display:none}.compass{background:#ffffffdb;border-color:#d3dfe9;color:#52657c;border-radius:7px}
+.card{grid-column:3;grid-row:1;margin:0;padding:21px;background:#fff;display:flex;flex-direction:column;align-items:stretch;gap:20px;border:1px solid var(--line);border-top:3px solid #dfa744;border-radius:14px;box-shadow:0 4px 18px #1a365006;min-width:0}.card-meta{gap:8px;flex-wrap:wrap}.card-meta .eyebrow{font-size:10px;letter-spacing:.08em;flex-basis:100%;order:0}.badge.kind{font-size:10px;background:#f0f4fa;color:#59708e;border-color:#e2e9f2;text-transform:none;font-family:var(--display);letter-spacing:0}.card-meta .small-action{position:absolute;right:14px;top:14px;border:0;background:#f4f6fa;color:#728099;font-size:18px}.company-identity{flex-direction:column;align-items:start;gap:15px}#company-logo .company-mark{width:76px;height:62px;border:1px solid #e8edf4;border-radius:10px;padding:9px}.company-identity h2{font-size:23px;line-height:1.2;letter-spacing:-.035em}.location{font-size:13px;font-weight:600;margin-top:12px;line-height:1.5;color:#486082}.address{font-size:12px;color:#8490a3;line-height:1.6;margin-top:5px}.about{font-size:13px;line-height:1.7;color:#6f7e95}.camera-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.camera-buttons button{min-width:0;padding:14px 12px;border-radius:9px;border-color:#dcece5;background:#f1f8f5;color:#22775f;font-size:11px;line-height:1.45;gap:9px}.camera-buttons .off{background:#fdf4f3;border-color:#f0dedc;color:#ad4e49}.camera-buttons strong{font-size:28px;font-family:var(--display)}.card-actions{padding-top:17px;gap:9px;display:flex;flex-direction:column;align-items:stretch;border-color:#e8edf4}.card-actions button,.card-actions a{width:100%;box-sizing:border-box;text-align:center;padding:12px;font-size:13px}.primary{background:#204a87;border-color:#204a87;color:white}.primary:hover{background:#183d73}.card-actions .fine{font-size:11px;margin:0}.atlas-workspace:has(.card[hidden]){grid-template-columns:260px minmax(0,1fr)}
+.directory,.journal{border-radius:14px;background:white}.view-title{font-size:32px}.directory-list button{background:#f8fafc;border-color:#e1e7ef;border-radius:9px;padding:14px}.alarm-table th{background:#f3f6fa}.alarm-table td,.alarm-table th{padding:14px;font-size:14px}.fine{color:var(--muted)}footer{padding:20px 0;font-size:11px;opacity:.8}footer a{color:#72819a}dialog{border-radius:14px;background:white;border-color:#dce4ee}.dialog-head{background:#f5f8fc;border-color:#e1e7ef}.dialog-body{font-size:15px}.import-panel{border-radius:12px;background:#fff;margin-bottom:16px}.import-panel summary{font-size:14px}.offline-toggle[aria-pressed="true"]{background:#fff0ee}
+@media(min-width:1500px){.atlas-workspace{grid-template-columns:285px minmax(0,1fr) 330px}.atlas-sidebar{height:calc(100vh - 240px)}.atlas-company-text strong{font-size:14px}.atlas-company-text small{font-size:12px}.map{min-height:410px}}
+@media(max-width:1180px){.atlas-workspace{grid-template-columns:225px minmax(0,1fr)}.card{grid-column:2;grid-row:2;display:grid;grid-template-columns:1fr 1fr}.card .company-identity{grid-column:1}.card .about{grid-column:2;grid-row:2}.card-meta,.card-actions{grid-column:1/-1}.card .camera-buttons{grid-column:1/-1}.atlas-sidebar{grid-row:1/3;height:calc(100vh - 220px);min-height:610px}.map{height:48vh;min-height:350px}.overview{min-width:340px}.metric{padding:14px}.atlas-workspace:has(.card[hidden]){grid-template-columns:225px minmax(0,1fr)}}
+@media(max-width:760px){.wrap{width:calc(100% - 24px)}.masthead .wrap{min-height:0}.brand-text{font-size:12px}.brand-block img{width:86px;height:37px}.nav a{padding:12px;font-size:13px}.hero{display:block;padding:20px 0}.overview{min-width:0;margin-top:16px}.metric{padding:12px}.metric strong{font-size:25px}.metric span{font-size:11px}.lede{font-size:13px}.atlas-workspace,.atlas-workspace:has(.card[hidden]){grid-template-columns:minmax(0,1fr);gap:12px}.atlas-sidebar{height:auto;min-height:0;grid-row:auto}.sidebar-head{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sidebar-title{grid-column:1/-1;margin-bottom:3px}.sidebar-head select{margin:0;font-size:12px}.sidebar-head input{font-size:13px}.atlas-company-list{display:flex;gap:6px;padding:0 12px 12px;max-height:106px}.atlas-company{min-width:190px;width:190px;flex-shrink:0;padding:9px}.atlas-company-text strong{font-size:12px}.atlas-company-text small{font-size:10px}.atlas-company .company-mark{width:28px;height:30px}.map-panel{grid-column:1;grid-row:2}.map{height:49vh;min-height:320px}.panel-head{padding:12px}.map-tools{gap:4px}.panel-head .fine{display:none}.card{grid-column:1;grid-row:3;display:flex;padding:20px;gap:16px}.card .about{display:block}.company-identity{flex-direction:row;align-items:center}.company-identity h2{font-size:21px}.card-meta .eyebrow{font-size:11px}.card-actions .fine{flex-basis:auto}.camera-buttons button{font-size:12px}.map-caption{font-size:10px}.directory,.journal{padding:16px}.view-title{font-size:26px}footer .data-note{font-size:11px}}
+@media(prefers-reduced-motion:no-preference){button,a{transition:background-color .16s,border-color .16s,box-shadow .16s}.card:not([hidden]){animation:workspace-card .22s ease-out}@keyframes workspace-card{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}}
+
 </style>
 <link rel="icon" type="image/png" sizes="512x512" href="kaptech-icon.png?v=20261124">
 <link rel="apple-touch-icon" href="kaptech-icon.png?v=20261124">
@@ -209,11 +222,11 @@ footer .data-note{margin-left:auto;color:var(--muted);font-size:.7rem}
       <div class="metric online"><strong id="online-total">—</strong><span>Камеры в работе</span></div>
       <div class="metric offline"><strong id="offline-total">—</strong><span>Камеры вне сети</span></div>
     </section></div>
-<section class="panel map-panel" aria-labelledby="map-title">
+<div class="atlas-workspace"><aside class="atlas-sidebar" aria-label="Предприятия на карте"><div class="sidebar-head"><div class="sidebar-title"><h2>Предприятия</h2><span class="sidebar-count" id="atlas-list-count"></span></div><label class="sr-only" for="atlas-company-search">Найти предприятие</label><input id="atlas-company-search" type="search" placeholder="Найти предприятие"><label class="sr-only" for="atlas-region-select">Область предприятия</label><select id="atlas-region-select"><option value="">Все области</option></select></div><div class="atlas-company-list" id="atlas-company-list"></div></aside><section class="panel map-panel" aria-labelledby="map-title">
         <div class="panel-head">
           <div><h2 id="map-title">Карта Казахстана</h2><p class="fine" id="map-hint">Нажмите на группу, чтобы приблизить регион</p></div>
           <div class="map-tools"><button type="button" class="map-reset" id="map-zoom-in" aria-label="Приблизить карту">+</button><button type="button" class="map-reset" id="map-zoom-out" aria-label="Отдалить карту">−</button><button type="button" class="map-reset offline-toggle" id="map-offline" aria-pressed="false">Вне сети</button>
-            <button class="map-reset" id="map-reset" type="button" hidden>← Весь Казахстан</button>
+            <button class="map-reset" id="map-reset" type="button" hidden>Весь Казахстан</button>
             <div class="atlas-search" id="atlas-search-wrap">
               <label class="sr-only" for="atlas-search">Поиск предприятия на карте</label>
               <input type="search" id="atlas-search" placeholder="Найти ДЗО" autocomplete="off">
@@ -263,9 +276,10 @@ footer .data-note{margin-left:auto;color:var(--muted);font-size:.7rem}
           <button class="off" type="button" data-details="off"><strong id="company-off"></strong><span>Камеры не работают</span></button>
         </div>
         <div class="card-actions"><button class="primary" type="button" data-details="all">Подробнее об организации <span aria-hidden="true">→</span></button>
-        <button class="map-reset alarm-jump" id="company-alarms" type="button">Тревоги организации →</button>
+        <button class="map-reset alarm-jump" id="company-alarms" type="button">Тревоги организации</button>
         </div>
       </section>
+    </div>
     </section>
     <section class="panel directory journal" id="journal" hidden aria-labelledby="journal-title">
       <div class="directory-head">
@@ -728,6 +742,7 @@ function selectCompany(company, region, focusCard = false, mapLocation = null) {
   renderCompanyStatus(company, region);
   if (regionChanged) showChoices();
   syncSelection();
+  renderAtlasSidebar();
   if (focusCard) card.focus();
 }
 
@@ -1044,6 +1059,7 @@ function setOfflineOnly(enabled) {
   else if (!card.hidden) renderCompanyStatus(selected, activeRegion);
   showAtlasResults();
   renderMapView();
+  renderAtlasSidebar();
 }
 
 offlineToggle.addEventListener('click', () => setOfflineOnly(!offlineOnly));
@@ -1186,6 +1202,46 @@ map.addEventListener('dblclick', event => {
 
 element('map-zoom-in').addEventListener('click', () => zoomAtlas(1 / 1.5));
 element('map-zoom-out').addEventListener('click', () => zoomAtlas(1.5));
+
+function renderAtlasSidebar() {
+  const list = element('atlas-company-list');
+  const query = element('atlas-company-search').value.trim().toLocaleLowerCase('ru');
+  const region = element('atlas-region-select').value;
+  const matching = companies.filter(company => (!region || company.sites.some(site => site[0] === region)) &&
+    (!offlineOnly || company.sites.some(site => cameraMapCount(company, site[0]))) &&
+    [company.name, company.legal, ...company.sites.flat()].join(' ').toLocaleLowerCase('ru').includes(query));
+  put('atlas-list-count', String(matching.length));
+  list.replaceChildren();
+  for (const company of matching) {
+    const site = company.sites.find(site => site[0] === region) || company.sites[0];
+    const button = action('', () => {
+      if (regionalEntries(site[0]).length) zoomToRegion(site[0], [company]);
+      selectCompany(company, site[0]);
+    }, 'atlas-company');
+    button.dataset.company = company.id;
+    button.setAttribute('aria-pressed', String(selected?.id === company.id && !card.hidden));
+    const text = node('span', '', 'atlas-company-text');
+    text.append(node('strong', company.name), node('small', names.get(site[0])));
+    button.append(companyMark(company), text);
+    list.append(button);
+  }
+  if (!matching.length) list.append(node('p', 'Предприятия не найдены. Измените поиск или область.', 'sidebar-empty'));
+}
+for (const region of regions) element('atlas-region-select').add(new Option(region.name, region.id));
+element('atlas-company-search').addEventListener('input', renderAtlasSidebar);
+element('atlas-region-select').addEventListener('change', () => {
+  const region = element('atlas-region-select').value;
+  const matching = companiesIn(region);
+  if (region && matching.length && regionalEntries(region).length) zoomToRegion(region, matching);
+  else if (!region) resetMap(false);
+  renderAtlasSidebar();
+});
+element('company-dismiss').addEventListener('click', () => {
+  card.hidden = true;
+  renderAtlasSidebar();
+  element('atlas-company-search').focus();
+});
+renderAtlasSidebar();
 
 </script>
 </body>
